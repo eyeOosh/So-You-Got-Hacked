@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>So You Got Hacked</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+    input { padding: 8px; width: 250px; }
+    button { padding: 8px 16px; margin-left: 8px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h1>So You Got Hacked</h1>
+  <p>Enter a base word to generate stronger password variations.</p>
+
+  <input id="baseWord" placeholder="Enter base word" />
+  <button onclick="generatePasswords()">Generate</button>
+
+  <ul id="results"></ul>
+
+  <script>
+    function randomNum() {
+      return Math.floor(Math.random() * 100);
+    }
+
+    function randomSymbol() {
+      const symbols = ['!', '@', '#', '$', '%', '&', '*'];
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    function generatePasswords() {
+      const base = document.getElementById('baseWord').value.trim();
+      const results = document.getElementById('results');
+      results.innerHTML = '';
+
+      if (!base) return;
+
+      const variations = [
+        base + randomNum(),
+        base.charAt(0).toUpperCase() + base.slice(1) + randomSymbol(),
+        base + randomSymbol() + randomNum(),
+        base.replace(/a/gi,'@').replace(/s/gi,'$'),
+        base + randomNum() + randomSymbol()
+      ];
+
+      variations.forEach(pw => {
+        const li = document.createElement('li');
+        li.textContent = pw;
+        results.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
