@@ -1,0 +1,24 @@
+{
+  "name": "so-you-got-hacked",
+  "version": "1.0.0",
+  "description": "aka Eirito",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyeOosh/So-You-Got-Hacked.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/eyeOosh/So-You-Got-Hacked/issues"
+  },
+  "homepage": "https://github.com/eyeOosh/So-You-Got-Hacked#readme",
+  "dependencies": {
+    "tailwindcss": "^4.2.1"
+  }
+}
