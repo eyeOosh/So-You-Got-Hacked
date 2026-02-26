@@ -1,16 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>So You Got Hacked</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
-    input { padding: 8px; width: 250px; }
-    button { padding: 8px 16px; margin-left: 8px; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 4px 0; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    input {
+      padding: 8px;
+      width: 250px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin-left: 8px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 4px 0;
+    }
   </style>
 </head>
+
 <body>
   <h1>So You Got Hacked</h1>
   <p>Enter a base word to generate stronger password variations.</p>
@@ -21,13 +42,26 @@
   <ul id="results"></ul>
 
   <script>
-    function randomNum() {
-      return Math.floor(Math.random() * 100);
+    function stringToSeed(str) {
+      let h = 1779033703 ^ str.length;
+      for (let i = 0; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+        h = (h << 13) | (h >>> 19);
+      }
+      return () => {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
+        return (h ^= h >>> 16) >>> 0;
+      };
     }
 
-    function randomSymbol() {
-      const symbols = ['!', '@', '#', '$', '%', '&', '*'];
-      return symbols[Math.floor(Math.random() * symbols.length)];
+    function mulberry32(a) {
+      return function () {
+        let t = (a += 0x6D2B79F5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
     }
 
     function generatePasswords() {
@@ -37,11 +71,23 @@
 
       if (!base) return;
 
+      const seedFunc = stringToSeed(base);
+      const rand = mulberry32(seedFunc());
+
+      function randomNum() {
+        return Math.floor(rand() * 100);
+      }
+
+      function randomSymbol() {
+        const symbols = ['!', '@', '#', '$', '%', '&', '*'];
+        return symbols[Math.floor(rand() * symbols.length)];
+      }
+
       const variations = [
         base + randomNum(),
         base.charAt(0).toUpperCase() + base.slice(1) + randomSymbol(),
         base + randomSymbol() + randomNum(),
-        base.replace(/a/gi,'@').replace(/s/gi,'$'),
+        base.replace(/a/gi, '@').replace(/s/gi, '$'),
         base + randomNum() + randomSymbol()
       ];
 
@@ -52,5 +98,7 @@
       });
     }
   </script>
+
 </body>
+
 </html>
